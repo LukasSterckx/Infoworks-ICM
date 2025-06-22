@@ -1,4 +1,4 @@
-The following scripts were written as part of a project which aimed to size blue green measures--more specifically depaving and decoupling--to reduce combined sewer overflow (CSO) frequencies. The project used an Infoworks ICM database of the sewer network. 
+The following scripts were written as part of a project which aimed to size blue green measures--more specifically depaving and decoupling--to reduce combined sewer overflow (CSO) frequencies. The project used an Infoworks ICM database of the sewer network. Scripts 1-3 and 6 are run in Infoworks ICM using the Ruby API. Scripts 4 and 5 are run using python (e.g. sypder).
 The following steps were carried out to map the sewer system:
 
 1) Make a csv file with the CSO node IDs and custom labels
