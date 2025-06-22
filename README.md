@@ -11,5 +11,5 @@ Sizing depaving/decoupling projects was done for a single CSO. The following ste
 3) Check if the CSO catchment contains external splits using "(3) Find upstream extrenal splits.rb". Consider if they play a big role--i.e. if a lot a water leaves the catchment via the external split. If yes, then this could cause problems in the rest of the analysis.
 4) Run a simulation of the entire network using a long time-series.
 5) Export the following results at every timestep to a csv file: the _volume_ in the CSO catchment conduits and nodes and the _ds_flow_ in the CSO conduit.
-6) Use the "" and "" scripts to prepare the data and determine the depavement/decoupling -- CSO frequency relationship
+6) Use the "" and "" scripts to prepare the data and determine the depavement/decoupling -- CSO frequency relationship.
 7) Verify the result by virtualy depaving the catchment in Infoworks using the "(6) Reduce the effective runoff area of selection by a user defined factor.rb" script. 
