@@ -8,7 +8,7 @@ $net.transaction_begin
 $net.clear_selection
 $ro = $net.row_object_collection('hw_node')
 
-csv_file = 'C:/Users/lukas/Documents/GEOGRAFIE/5_master/Thesis/Data_en_resultaten/Ruby/nodes_labels.csv'
+csv_file = 'PATH_TO_YOUR_CSV_FILE'
 
 # Read the csv file and make a hash with the Node IDs and the corresponding custom label
 def import_csv(csv_file)
