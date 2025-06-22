@@ -12,4 +12,4 @@ Sizing depaving/decoupling projects was done for a single CSO. The following ste
 4) Run a simulation of the entire network using a long time-series.
 5) Export the following results at every timestep to a csv file: the _volume_ in the CSO catchment conduits and nodes and the _ds_flow_ in the CSO conduit.
 6) Prepare the data and determine the depavement/decoupling - CSO frequency relationship using "(4) Prepare data.py" and "(5) Determine depaving - CSO frequency relationship.py". The _effective runoff area_ needed in script 5 is outputed by script "(6) Reduce the effective runoff area of selection by a user defined factor.rb" (use temporarly a factor 1). 
-7) Verify the result by virtualy depaving the catchment in Infoworks ICM using the "(6) Reduce the effective runoff area of selection by a user defined factor.rb" script. 
+7) Verify the result by virtualy depaving the catchment in Infoworks ICM using the "(6) Reduce the effective runoff area of selection by a user defined factor.rb" script and running a new simulation. 
