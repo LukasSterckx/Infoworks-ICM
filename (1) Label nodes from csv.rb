@@ -1,4 +1,5 @@
 # The following script takes a csv with node IDs and custom labels and writes the labels to the User_text_8 field of the corresponding node. 
+# It further selects all nodes which were included in the csv.
 
 require 'csv'
 
