@@ -1,12 +1,19 @@
 # Adapted from: https://github.com/innovyze/Open-Source-Support/tree/main/01%20InfoWorks%20ICM/01%20Ruby/01%20InfoWorks/0039%20-%20Calculate%20subcatchment%20areas%20in%20all%20nodes%20upstream%20a%20node
 
 # The following scripts is used for mapping the zones upstream of each CSO and the main conduits connecting them. 
-# Start by selecting all CSO nodes (use e.g. script "label nodes from csv").
-# The script traces upstream from every CSO node (stopping when it encouters another CSO node) and labels all nodes and links in field user_text_9 with the label of the CSO node (user_text_8).
-# It then traces down from every CSO node and labels all conduits as 'main' conduits in the user_text_10 field.
+# The script starts by asking for a selection list of the CSO nodes (use e.g. script "label nodes from csv" to select these and save the selection in a selection list).
+# The script traces upstream from every CSO node (untill it encouters another CSO node) and labels all nodes links, and subcatchments in the CSO zone.
+# This is done in the field user_text_9 with the label of the CSO node (user_text_8).
+# It further lists all the splits of each CSO zone.
+# Finally the script traces down from every CSO node and labels all downstream conduits as 'main' conduits in the user_text_10 field.
+
+# NOTHING HAS TO BE CHANGED IN THIS SCRIPT
 
 # variables
 $net = WSApplication.current_network
+$net.clear_selection
+selection = WSApplication.choose_selection("Choose the Selection list containing the CSO nodes")
+$net.load_selection(selection)
 $ro = $net.row_objects_selection('hw_node')
 
 # Start a transaction to edit the data
@@ -22,7 +29,7 @@ $unprocessed_combined_links_ds = Array.new
 $seen_objects = Array.new
 $splits = Array.new
 
-# Marks the given object as selected and seen, and adds it to the seen objects list
+# Marks the given object as seen, and adds it to the seen objects list
 def mark(object)
   if object
     #object.selected = true
@@ -90,6 +97,7 @@ def label_subcatchments(object, node_label)
   object.navigate('subcatchments').each do |subs|
     subs.user_text_9 = node_label
     subs.write
+    subs.selected= true
   end
 end
 
@@ -106,20 +114,15 @@ def trace_us(node)
   label_subcatchments(node, node_label)
   unprocessed_links_us(node)
   
-  if $unprocessed_links_us.size == 0
-    puts ""
-    puts "#{node.node_id} has no upstream links"   
-  end
-  
   while $unprocessed_links_us.size > 0
     working_link = $unprocessed_links_us.shift
     label(working_link, node_label)
     label_subcatchments(working_link, node_label)
     working_node = working_link.us_node
     if working_node && !working_node._seen 
-      if working_node._mouth
+      if working_node._cso # If node is a CSO, don't continue tracing upstream
         is_split(working_node)
-      else
+      else # Continue tracing upstream
         unprocessed_links_us(working_node)
         mark(working_node)
         label(working_node, node_label)
@@ -179,12 +182,17 @@ def mark_main_conduits(node)
   end
 end
  
-# Mark each selected node as seen so it forms a border to the weirshed
+# Mark each selected node as a cso so it forms a border to the weirshed
 $ro.each do |node|
-  node._mouth = true
+  node._cso = true
 end
 
-# Clean the User 10 table of all links, next trace down from every Outfall
+# Executes the trace_us function on the initial node(s) to populate the 'most_upstream_nodes' array
+$ro.each do |node|
+  trace_us(node)
+end
+
+# Clean the User 10 table of all links, next trace down from every CSO
 $net.row_object_collection('_links').each do |link|
   link.user_text_10 = ''
   link.write
@@ -194,11 +202,8 @@ $ro.each do |node|
   mark_main_conduits(node)
 end
 
-# Executes the trace_us function on the initial node(s) to populate the 'most_upstream_nodes' array
-$ro.each do |node|
-  trace_us(node)
-end
-
 $net.transaction_commit
-puts 'The nodes upstream of input node have been given a weirshed label in the user_text_8 field'
-$net.commit 'The nodes upstream of input node have been given a weirshed label in the user_text_8 field'
+puts ''
+puts 'The nodes, links and subcatchments upstream of each CSO have been given the CSO label in the user_text_9 field'
+puts 'The links downstream of each CSO have been labeled as mains in the user_text_10 field'
+$net.commit 'The nodes, links and subcatchments upstream of each CSO have been given the CSO label in the user_text_9 field, The links downstream of each CSO have been labeled as mainsin the user_text_10 field'
