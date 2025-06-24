@@ -132,7 +132,7 @@ if check_input(factor)
   # Create runoff factor hash
   $runoff_factor = Hash.new
   $net.row_object_collection('hw_runoff_surface').each do |rs|
-    $runoff_factor[rs.runoff_index] = rs.runoff_factor
+    $runoff_factor[rs.runoff_index] = rs.runoff_coefficient
   end
   
   # Start a transaction to edit the data
@@ -141,13 +141,14 @@ if check_input(factor)
   # Get total and flexi effective runoff area (era) and calculate new flexi constant
   total_era, flexi_era = total_era()
   flexi_coeff = 1 - (1 - factor)*total_era/flexi_era
-  puts("effective runoff area = #{total_era}, flexi effective runoff area = #{flexi_era}")
+  puts("Orginal effective runoff area = #{total_era}, original flexi effective runoff area = #{flexi_era}")
   
   # Depave Flexi area
   depave_flexi_area(flexi_coeff)
   new_total_era, = total_era()
   depaved_coeff = new_total_era / total_era
-  puts("depaved factor = #{depaved_coeff}")
+  puts("New effective runoff area = #{new_total_era}")
+  puts("Depaved factor = #{depaved_coeff}")
   
   # Commit changes and inform user
   $net.validate(new_scenario)
