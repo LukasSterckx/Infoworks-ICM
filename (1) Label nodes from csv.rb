@@ -8,19 +8,23 @@ $net.transaction_begin
 $net.clear_selection
 $ro = $net.row_object_collection('hw_node')
 
+#ADAPT THE BELOW PATH AND HEADERS 
 csv_file = 'PATH_TO_YOUR_CSV_FILE'
+header_ID = 'HEADER_ID_COLUMN'
+header_label = 'HEADER_LABEL_COLUMN'
+
+# DON'T EDIT BELOW THIS LINE
 
 # Read the csv file and make a hash with the Node IDs and the corresponding custom label
 def import_csv(csv_file)
   labels = {}
   CSV.foreach(csv_file, col_sep: ';', headers: true) do |row|
-    id = row['Node ID for mapping']
-    label = row['Label']
+    id = row[header_ID]
+    label = row[header_label]
     labels[id] = label
   end
   labels
 end
-
 
 id_to_label = import_csv(csv_file)
 
