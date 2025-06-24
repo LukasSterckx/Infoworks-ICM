@@ -1,5 +1,5 @@
 # The following script creates a new scenario were the effective runoff area (ERA) of selection of subcatchments is reduced by a user defined (depavement) factor. 
-# First the user is asked for a selection list and a depavement factor
+# First the user is asked for a selection list containing all contributing subcatchments and a depavement factor
 # The script next applies the depavement factor to all subcatchments in the selection list
 
 # The script considers that some land uses can be depaved and others not. 
